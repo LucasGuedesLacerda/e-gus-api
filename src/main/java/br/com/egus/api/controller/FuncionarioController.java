@@ -39,7 +39,7 @@ public class FuncionarioController {
 
     @GetMapping
     public ResponseEntity<List<Funcionario>> listarTodos(@RequestParam int idMercado) {
-        List<Funcionario> funcionarios = funcionarioRepository.findAll();
+        List<Funcionario> funcionarios = funcionarioRepository.findByIdMercado(idMercado);
         return ResponseEntity.ok(funcionarios);
     }
 
