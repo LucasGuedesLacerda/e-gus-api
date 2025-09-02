@@ -31,6 +31,6 @@ public class AutenticaService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou senha inválidos");
         }
 
-        return new LoginResponse(funcionario.getId(), funcionario.getCargo().name());
+        return new LoginResponse(funcionario.getId(), funcionario.getCargo().name(), funcionario.getNome(),funcionario.getIdMercado());
     }
 }

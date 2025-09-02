@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/funcionarios")
 public class FuncionarioController {
@@ -37,7 +38,7 @@ public class FuncionarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Funcionario>> listarTodos() {
+    public ResponseEntity<List<Funcionario>> listarTodos(@RequestParam int idMercado) {
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         return ResponseEntity.ok(funcionarios);
     }
