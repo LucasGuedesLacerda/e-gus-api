@@ -6,6 +6,7 @@ import br.com.egus.api.service.AutenticaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/login")
 public class AutenticaController {
