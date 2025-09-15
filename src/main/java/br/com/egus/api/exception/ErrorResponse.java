@@ -10,5 +10,17 @@ public class ErrorResponse {
         this.message = message;
         this.timestamp = System.currentTimeMillis();
     }
+        public int getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+}
 
 }
