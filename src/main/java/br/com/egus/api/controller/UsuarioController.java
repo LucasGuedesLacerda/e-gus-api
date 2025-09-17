@@ -72,6 +72,11 @@ public class UsuarioController {
             }
 
             usuario.setCpf(request.getCpf());
+
+            if (request.getPreferences() != null) {
+                 usuario.setPreferences(request.getPreferences());
+            }
+            
             Usuario atualizado = usuarioRepository.save(usuario);
             return ResponseEntity.ok(atualizado);
         }).orElse(ResponseEntity.notFound().build());

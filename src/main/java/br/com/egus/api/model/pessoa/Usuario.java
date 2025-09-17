@@ -1,5 +1,9 @@
 package br.com.egus.api.model.pessoa;
 
+import java.util.Map;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +18,9 @@ public class Usuario extends Pessoa {
     @Column(unique = true, nullable = false)
     private Long cpf;
 
+      @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "preferences", columnDefinition = "jsonb")
+    private Map<String, Object> preferences;
 
     public Long getId() {
         return id;
@@ -29,6 +36,14 @@ public class Usuario extends Pessoa {
 
     public void setCpf(Long cpf) {
         this.cpf = cpf;
+    }
+    
+      public Map<String, Object> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Map<String, Object> preferences) {
+        this.preferences = preferences;
     }
 
 }

@@ -1,11 +1,15 @@
 package br.com.egus.api.dto;
 
+import java.util.Map;
+
 public class UsuarioRequest {
 
     private String nome;
     private String email;
     private String senha;
     private Long cpf;
+    private Map<String, Object> preferences;
+
 
     public String getNome() {
         return nome;
@@ -37,5 +41,13 @@ public class UsuarioRequest {
 
     public void setCpf(Long cpf) {
         this.cpf = cpf;
+    }
+    
+    public Map<String, Object> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Map<String, Object> preferences) {
+        this.preferences = preferences;
     }
 }

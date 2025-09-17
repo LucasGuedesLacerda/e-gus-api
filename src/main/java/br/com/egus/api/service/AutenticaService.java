@@ -31,7 +31,7 @@ public class AutenticaService {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "CPF ou senha inválidos");
             }
 
-            return new LoginResponse(usuario.getId(), usuario.getNome(), "USUARIO");
+            return new LoginResponse(usuario.getId(), usuario.getNome(), "USUARIO", usuario.getCpf(), usuario.getEmail(), usuario.getPreferences());
         }
 
         if (request.getEmail() != null) {
@@ -64,7 +64,13 @@ public class AutenticaService {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou senha inválidos");
             }
 
-            return new LoginResponse(usuario.getId(), usuario.getNome(), "USUARIO");
+            return new LoginResponse(
+                                    usuario.getId(), 
+                                    usuario.getNome(), "USUARIO",
+                                    usuario.getCpf(),
+                                    usuario.getEmail(),
+                                    usuario.getPreferences()
+                                    );
         }
 
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "É necessário informar email ou CPF");
