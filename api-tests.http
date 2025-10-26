@@ -1,0 +1,144 @@
+### ========================================
+### TESTE 1: Cadastrar Usuário (DEVE FUNCIONAR)
+### ========================================
+POST http://localhost:8080/usuarios
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "teste@email.com",
+  "senha": "senha123",
+  "cpf": 12345678901
+}
+
+### RESULTADO ESPERADO: 200 OK
+### ANOTE O "id" RETORNADO PARA USAR NO TESTE 4
+
+###
+
+### ========================================
+### TESTE 2: Cadastrar Usuário com E-mail Duplicado (DEVE FALHAR)
+### ========================================
+POST http://localhost:8080/usuarios
+Content-Type: application/json
+
+{
+  "nome": "Maria Santos",
+  "email": "teste@email.com",
+  "senha": "outrasenha",
+  "cpf": 98765432100
+}
+
+### RESULTADO ESPERADO: 400 Bad Request
+### RESPOSTA: "e-mail já existente"
+
+###
+
+### ========================================
+### TESTE 3: Cadastrar Funcionário com E-mail Duplicado (DEVE FALHAR)
+### ========================================
+POST http://localhost:8080/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "Pedro Oliveira",
+  "email": "teste@email.com",
+  "senha": "senha456",
+  "ativo": true,
+  "cargo": "Administrador",
+  "idMercado": 1
+}
+
+### RESULTADO ESPERADO: 400 Bad Request
+### RESPOSTA: "e-mail já existente"
+
+###
+
+### ========================================
+### TESTE 4: Atualizar Usuário Mantendo Mesmo E-mail (DEVE FUNCIONAR)
+### ATENÇÃO: Substitua {ID} pelo ID obtido no TESTE 1
+### ========================================
+PUT http://localhost:8080/usuarios/1
+Content-Type: application/json
+
+{
+  "nome": "João Silva Atualizado",
+  "email": "teste@email.com",
+  "cpf": 12345678901
+}
+
+### RESULTADO ESPERADO: 200 OK
+### O sistema permite manter o próprio e-mail
+
+###
+
+### ========================================
+### TESTE 5: Cadastrar Usuário com E-mail Diferente (DEVE FUNCIONAR)
+### ========================================
+POST http://localhost:8080/usuarios
+Content-Type: application/json
+
+{
+  "nome": "Ana Costa",
+  "email": "ana@email.com",
+  "senha": "senha789",
+  "cpf": 11122233344
+}
+
+### RESULTADO ESPERADO: 200 OK
+### E-mail diferente, deve cadastrar normalmente
+
+###
+
+### ========================================
+### TESTE 6: Cadastrar Funcionário com E-mail Diferente (DEVE FUNCIONAR)
+### ========================================
+POST http://localhost:8080/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "Carlos Mendes",
+  "email": "carlos@email.com",
+  "senha": "senha999",
+  "ativo": true,
+  "cargo": "Estoquista",
+  "idMercado": 1
+}
+
+### RESULTADO ESPERADO: 200 OK
+### E-mail diferente, deve cadastrar normalmente
+
+###
+
+### ========================================
+### TESTE 7: Listar Todos os Usuários
+### ========================================
+GET http://localhost:8080/usuarios
+
+###
+
+### ========================================
+### TESTE 8: Listar Funcionários por Mercado
+### ========================================
+GET http://localhost:8080/funcionarios?idMercado=1
+
+###
+
+### ========================================
+### TESTE EXTRA: Tentar Atualizar com E-mail de Outro Usuário (DEVE FALHAR)
+### Primeiro crie outro usuário no TESTE 5, depois tente atualizar o primeiro
+### com o e-mail do segundo
+### ========================================
+PUT http://localhost:8080/usuarios/1
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "ana@email.com",
+  "cpf": 12345678901
+}
+
+### RESULTADO ESPERADO: 400 Bad Request
+### RESPOSTA: "e-mail já existente"
+
+###

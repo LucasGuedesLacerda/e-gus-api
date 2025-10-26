@@ -3,6 +3,7 @@ package br.com.egus.api.controller;
 import br.com.egus.api.dto.UsuarioRequest;
 import br.com.egus.api.model.pessoa.Usuario;
 import br.com.egus.api.repository.UsuarioRepository;
+import br.com.egus.api.service.EmailValidationService;
 import br.com.egus.api.service.SenhaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,19 +16,23 @@ public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
     private final SenhaService senhaService;
+    private final EmailValidationService emailValidationService;
 
-    public UsuarioController(UsuarioRepository usuarioRepository, SenhaService senhaService) {
+    public UsuarioController(UsuarioRepository usuarioRepository,
+                             SenhaService senhaService,
+                             EmailValidationService emailValidationService) {
         this.usuarioRepository = usuarioRepository;
         this.senhaService = senhaService;
+        this.emailValidationService = emailValidationService;
     }
 
-    // Cadastrar novo usuário
     @PostMapping
     public ResponseEntity<?> cadastrar(@RequestBody UsuarioRequest request) {
-
-        if (usuarioRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.badRequest().body("Email já cadastrado");
+        // Valida e-mail único entre usuários E funcionários
+        if (emailValidationService.emailJaExiste(request.getEmail())) {
+            return ResponseEntity.badRequest().body("e-mail já existente");
         }
+
         if (usuarioRepository.existsByCpf(request.getCpf())) {
             return ResponseEntity.badRequest().body("CPF já cadastrado");
         }
@@ -42,7 +47,6 @@ public class UsuarioController {
         return ResponseEntity.ok(salvo);
     }
 
-    // Listar usuário por ID
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> listarPorId(@PathVariable Long id) {
         return usuarioRepository.findById(id)
@@ -50,20 +54,25 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Listar todos os usuários
     @GetMapping
     public ResponseEntity<List<Usuario>> listarTodos() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         return ResponseEntity.ok(usuarios);
     }
 
-    // Atualizar usuário
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizar(
+    public ResponseEntity<?> atualizar(
             @PathVariable Long id,
             @RequestBody UsuarioRequest request) {
 
         return usuarioRepository.findById(id).map(usuario -> {
+            // Valida e-mail apenas se for diferente do atual
+            if (!usuario.getEmail().equals(request.getEmail())) {
+                if (emailValidationService.emailJaExisteExceto(request.getEmail(), id, "USUARIO")) {
+                    return ResponseEntity.badRequest().body("e-mail já existente");
+                }
+            }
+
             usuario.setNome(request.getNome());
             usuario.setEmail(request.getEmail());
 
@@ -74,9 +83,9 @@ public class UsuarioController {
             usuario.setCpf(request.getCpf());
 
             if (request.getPreferences() != null) {
-                 usuario.setPreferences(request.getPreferences());
+                usuario.setPreferences(request.getPreferences());
             }
-            
+
             Usuario atualizado = usuarioRepository.save(usuario);
             return ResponseEntity.ok(atualizado);
         }).orElse(ResponseEntity.notFound().build());
